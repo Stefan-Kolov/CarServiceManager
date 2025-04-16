@@ -2,18 +2,15 @@
   <div class="car-management">
     <h2>Manage Cars</h2>
 
-    <!-- Car Form -->
     <form @submit.prevent="handleFormSubmit" class="car-form">
       <input v-model="newCar.brand" placeholder="Brand" required />
       <input v-model="newCar.year" placeholder="Year" type="number" required />
       <input v-model="newCar.engine" placeholder="Engine" required />
       <input v-model="newCar.model" placeholder="Model" required />
       <input v-model="newCar.vin" placeholder="VIN" required />
-
       <button type="submit">{{ isEditing ? 'Update Car' : 'Add Car' }}</button>
     </form>
 
-    <!-- Car Table -->
     <div class="table-wrapper">
       <table>
         <thead>
@@ -36,6 +33,7 @@
           <td>
             <button @click="editCar(car)">Edit</button>
             <button @click="deleteCar(index)">Delete</button>
+            <button @click="$emit('viewHistory', car)">View History</button>
           </td>
         </tr>
         </tbody>
@@ -57,21 +55,19 @@ export default {
         model: '',
         vin: '',
       },
-      selectedCar: null, // Holds the car being edited
-      isEditing: false,  // Tracks whether we are editing a car
+      selectedCar: null,
+      isEditing: false,
     };
   },
   methods: {
     handleFormSubmit() {
       if (this.isEditing) {
-        // Update the car
         const index = this.cars.findIndex((car) => car.vin === this.selectedCar.vin);
         if (index !== -1) {
           this.cars[index] = { ...this.newCar };
         }
         this.resetForm();
       } else {
-        // Add new car
         this.$emit('addCar', { ...this.newCar });
         this.resetForm();
       }
@@ -79,7 +75,7 @@ export default {
     editCar(car) {
       this.selectedCar = car;
       this.isEditing = true;
-      this.newCar = { ...car }; // Pre-fill the form with car data
+      this.newCar = { ...car };
     },
     deleteCar(index) {
       this.cars.splice(index, 1);

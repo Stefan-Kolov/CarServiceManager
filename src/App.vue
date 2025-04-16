@@ -1,14 +1,27 @@
 <template>
   <div class="dashboard">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <h2>Auto Service</h2>
-      <button @click="currentView = 'cars'">Manage Cars</button>
-      <button @click="currentView = 'employees'">Manage Employees</button>
-      <button @click="currentView = 'services'">Manage Services</button>
+      <button @click="currentView = 'cars'">
+        <Car class="icon" /> Manage Cars
+      </button>
+      <button @click="currentView = 'employees'">
+        <Users class="icon" /> Manage Employees
+      </button>
+      <button @click="currentView = 'services'">
+        <Wrench class="icon" /> Manage Services
+      </button>
+      <button @click="currentView = 'schedule'">
+        <CalendarCheck class="icon" /> Schedule Service
+      </button>
+      <button @click="currentView = 'statistics'">
+        <BarChart class="icon" /> View Statistics
+      </button>
+      <button @click="currentView = 'parts'">
+        <Package class="icon" /> Manage Parts
+      </button>
     </aside>
 
-    <!-- Main Content -->
     <main class="main-content">
       <CarManagement
           v-if="currentView === 'cars'"
@@ -16,6 +29,7 @@
           @addCar="addCar"
           @updateCar="updateCar"
           @deleteCar="deleteCar"
+          @viewHistory="handleViewHistory"
       />
 
       <EmployeeManagement
@@ -31,9 +45,27 @@
           :cars="cars"
           :employees="employees"
           :services="services"
+          :selectedCar="selectedCarForHistory"
           @addService="addService"
           @updateService="updateService"
           @deleteService="deleteService"
+      />
+
+      <ScheduleManagement
+          v-if="currentView === 'schedule'"
+          :cars="cars"
+          :employees="employees"
+          :scheduledServices="scheduledServices"
+          @scheduleService="scheduleService"
+      />
+
+      <StatisticsManagement
+          v-if="currentView === 'statistics'"
+          :services="services"
+      />
+
+      <PartsInventory
+          v-if="currentView === 'parts'"
       />
     </main>
   </div>
@@ -44,6 +76,11 @@ import { ref } from 'vue';
 import CarManagement from './components/CarManagement.vue';
 import EmployeeManagement from './components/EmployeeManagement.vue';
 import ServiceManagement from './components/ServiceManagement.vue';
+import ScheduleManagement from './components/ScheduleManagement.vue';
+import StatisticsManagement from './components/StatisticsManagement.vue';
+import PartsInventory from './components/PartsInventory.vue';
+import { Car, Users, Wrench, CalendarCheck, BarChart, Package } from 'lucide-vue-next';
+
 
 export default {
   name: 'App',
@@ -51,9 +88,13 @@ export default {
     CarManagement,
     EmployeeManagement,
     ServiceManagement,
+    ScheduleManagement,
+    StatisticsManagement,
+    PartsInventory,
   },
   setup() {
     const currentView = ref('cars');
+    const selectedCarForHistory = ref(null);
 
     const cars = ref([
       { brand: 'Porsche', year: 2020, engine: '4.0', model: 'GT3 RS', vin: '111' },
@@ -75,42 +116,36 @@ export default {
         employee: employees.value[0],
         date: '2025-04-01',
       },
+      {
+        description: 'Brakes Change',
+        price: 500,
+        car: cars.value[1],
+        employee: employees.value[1],
+        date: '2025-04-01',
+      },
     ]);
 
-    const addCar = (car) => {
-      cars.value.push(car);
+    const scheduledServices = ref([]);
+
+    const addCar = (car) => cars.value.push(car);
+    const updateCar = (car, index) => cars.value[index] = car;
+    const deleteCar = (index) => cars.value.splice(index, 1);
+
+    const addEmployee = (employee) => employees.value.push(employee);
+    const updateEmployee = (employee, index) => employees.value[index] = employee;
+    const deleteEmployee = (index) => employees.value.splice(index, 1);
+
+    const addService = (service) => services.value.push(service);
+    const updateService = (service, index) => services.value[index] = service;
+    const deleteService = (index) => services.value.splice(index, 1);
+
+    const scheduleService = (scheduledService) => {
+      scheduledServices.value.push(scheduledService);
     };
 
-    const updateCar = (car, index) => {
-      cars.value[index] = car;
-    };
-
-    const deleteCar = (index) => {
-      cars.value.splice(index, 1);
-    };
-
-    const addEmployee = (employee) => {
-      employees.value.push(employee);
-    };
-
-    const updateEmployee = (employee, index) => {
-      employees.value[index] = employee;
-    };
-
-    const deleteEmployee = (index) => {
-      employees.value.splice(index, 1);
-    };
-
-    const addService = (service) => {
-      services.value.push(service);
-    };
-
-    const updateService = (service, index) => {
-      services.value[index] = service;
-    };
-
-    const deleteService = (index) => {
-      services.value.splice(index, 1);
+    const handleViewHistory = (car) => {
+      selectedCarForHistory.value = car;
+      currentView.value = 'services';
     };
 
     return {
@@ -118,6 +153,8 @@ export default {
       cars,
       employees,
       services,
+      scheduledServices,
+      selectedCarForHistory,
       addCar,
       updateCar,
       deleteCar,
@@ -127,6 +164,8 @@ export default {
       addService,
       updateService,
       deleteService,
+      scheduleService,
+      handleViewHistory,
     };
   },
 };

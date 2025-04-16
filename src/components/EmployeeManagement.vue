@@ -2,13 +2,11 @@
   <div class="employee-management">
     <h2>Manage Employees</h2>
 
-    <!-- Employee Form -->
     <form @submit.prevent="handleFormSubmit" class="employee-form">
       <input v-model="newEmployee.name" placeholder="Employee Name" required />
       <button type="submit">{{ isEditing ? 'Update Employee' : 'Add Employee' }}</button>
     </form>
 
-    <!-- Employee Table -->
     <div class="table-wrapper">
       <table>
         <thead>
@@ -40,21 +38,19 @@ export default {
       newEmployee: {
         name: '',
       },
-      selectedEmployee: null, // Holds the employee being edited
-      isEditing: false, // Tracks whether we are editing an employee
+      selectedEmployee: null,
+      isEditing: false,
     };
   },
   methods: {
     handleFormSubmit() {
       if (this.isEditing) {
-        // Update the employee
         const index = this.employees.findIndex((employee) => employee.name === this.selectedEmployee.name);
         if (index !== -1) {
           this.employees[index] = { ...this.newEmployee };
         }
         this.resetForm();
       } else {
-        // Add new employee
         this.$emit('addEmployee', { ...this.newEmployee });
         this.resetForm();
       }
@@ -62,7 +58,7 @@ export default {
     editEmployee(employee) {
       this.selectedEmployee = employee;
       this.isEditing = true;
-      this.newEmployee = { ...employee }; // Pre-fill the form with employee data
+      this.newEmployee = { ...employee };
     },
     deleteEmployee(index) {
       this.employees.splice(index, 1);

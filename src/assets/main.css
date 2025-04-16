@@ -208,5 +208,62 @@ tr:hover {
 .table-wrapper button:hover {
   background-color: #2980b9;
 }
+.action-button {
+  padding: 0.5rem 1rem;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease;
+}
 
+.action-button:hover {
+  background-color: #2980b9;
+}
+.statistics-management h2 {
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+.statistics-management .statistics {
+  padding: 10px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+}
+
+.statistics-management .statistics h3 {
+  margin-bottom: 10px;
+}
+
+.statistics-management .statistics p {
+  font-size: 1em;
+}
+
+.statistics-management .chart {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e0e0e0;
+  border-radius: 8px;
+}
+
+.statistics-management .chart h3 {
+  margin-bottom: 10px;
+}
+.sidebar button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.sidebar .icon {
+  width: 20px;
+  height: 20px;
+}
 

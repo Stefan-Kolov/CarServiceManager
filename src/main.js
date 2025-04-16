@@ -3,6 +3,7 @@ import App from './App.vue';
 import router from './router'; // Import the router
 import { createStore } from 'vuex'; // If using Vuex
 import './assets/main.css'
+import * as lucideIcons from 'lucide-vue-next';
 // Define your Vuex store (if applicable)
 const store = createStore({
     state() {
@@ -16,6 +17,10 @@ const store = createStore({
 });
 
 const app = createApp(App);
+
+for (const [key, component] of Object.entries(lucideIcons)) {
+    app.component(key, component);
+}
 
 // Use the store and router
 app.use(store);

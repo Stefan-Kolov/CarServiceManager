@@ -4,6 +4,8 @@ import router from './router'; // Import the router
 import { createStore } from 'vuex'; // If using Vuex
 import './assets/main.css'
 import * as lucideIcons from 'lucide-vue-next';
+
+
 // Define your Vuex store (if applicable)
 const store = createStore({
     state() {

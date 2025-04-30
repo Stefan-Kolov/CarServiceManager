@@ -54,9 +54,6 @@
       <ScheduleManagement
           v-if="currentView === 'schedule'"
           :cars="cars"
-          :employees="employees"
-          :scheduledServices="scheduledServices"
-          @scheduleService="scheduleService"
       />
 
       <StatisticsManagement
@@ -81,20 +78,20 @@ import StatisticsManagement from './components/StatisticsManagement.vue';
 import PartsInventory from './components/PartsInventory.vue';
 import { Car, Users, Wrench, CalendarCheck, BarChart, Package } from 'lucide-vue-next';
 
-
 export default {
   name: 'App',
   components: {
     CarManagement,
     EmployeeManagement,
     ServiceManagement,
-    ScheduleManagement,
     StatisticsManagement,
     PartsInventory,
+    ScheduleManagement,
   },
   setup() {
     const currentView = ref('cars');
     const selectedCarForHistory = ref(null);
+    const scheduledServices = ref([]);
 
     const cars = ref([
       { brand: 'Porsche', year: 2020, engine: '4.0', model: 'GT3 RS', vin: '111' },
@@ -125,8 +122,6 @@ export default {
       },
     ]);
 
-    const scheduledServices = ref([]);
-
     const addCar = (car) => cars.value.push(car);
     const updateCar = (car, index) => cars.value[index] = car;
     const deleteCar = (index) => cars.value.splice(index, 1);
@@ -139,9 +134,7 @@ export default {
     const updateService = (service, index) => services.value[index] = service;
     const deleteService = (index) => services.value.splice(index, 1);
 
-    const scheduleService = (scheduledService) => {
-      scheduledServices.value.push(scheduledService);
-    };
+
 
     const handleViewHistory = (car) => {
       selectedCarForHistory.value = car;
@@ -153,7 +146,6 @@ export default {
       cars,
       employees,
       services,
-      scheduledServices,
       selectedCarForHistory,
       addCar,
       updateCar,
@@ -164,8 +156,8 @@ export default {
       addService,
       updateService,
       deleteService,
-      scheduleService,
       handleViewHistory,
+      scheduledServices
     };
   },
 };

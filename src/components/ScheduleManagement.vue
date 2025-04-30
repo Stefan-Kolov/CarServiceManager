@@ -1,110 +1,89 @@
 <template>
-  <div class="schedule-management">
-    <h2>Schedule Service</h2>
-
-    <vue3-datepicker
-        v-model="selectedDate"
-        format="yyyy-MM-dd"
-        :disable-date="disableDates"
-        placeholder="Pick a date"
-    />
-
-    <div v-if="selectedDate" class="service-form">
-      <h3>Schedule a Service for {{ selectedDate }}</h3>
-
-      <select v-model="selectedService" required>
-        <option disabled value="">Select Service</option>
-        <option v-for="service in services" :key="service.id" :value="service">
-          {{ service.name }} - ${{ service.price }}
+  <div>
+    <form @submit.prevent="addEvent" class="event-form calendar-form">
+      <input v-model="title" placeholder="Service Type (e.g. Oil Change)" required />
+      <select v-model="selectedCarVin" required>
+        <option disabled value="">Select a car</option>
+        <option v-for="car in cars" :key="car.vin" :value="car.vin">
+          {{ car.brand }} {{ car.model }} ({{ car.vin }})
         </option>
       </select>
+      <input v-model="start" placeholder="Start (e.g. 2025-05-01 10:00)" required />
+      <input v-model="end" placeholder="End (e.g. 2025-05-01 12:00)" required />
+      <button type="submit">Add Event</button>
+    </form>
 
-      <select v-model="selectedEmployee" required>
-        <option disabled value="">Select Employee</option>
-        <option v-for="employee in employees" :key="employee.name" :value="employee">
-          {{ employee.name }}
-        </option>
-      </select>
-
-      <button @click="scheduleService" class="action-button">Schedule Service</button>
-    </div>
-
-    <div v-if="scheduledServices.length > 0">
-      <h3>Scheduled Services</h3>
-      <ul>
-        <li v-for="(service, index) in scheduledServices" :key="index">
-          {{ service.date }} - {{ service.service.name }} - Assigned to: {{ service.employee.name }}
-        </li>
-      </ul>
-    </div>
+    <ScheduleXCalendar :calendar-app="calendarApp" />
   </div>
 </template>
 
-<script>
-import Vue3Datepicker from 'vue3-datepicker';
+<script setup>
+import { ref, shallowRef, watch } from 'vue'
+import { ScheduleXCalendar } from '@schedule-x/vue'
+import { createCalendar, createViewWeek, createViewMonthGrid, createViewDay } from '@schedule-x/calendar'
+import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop'
+import '@schedule-x/theme-default/dist/calendar.css'
 
-export default {
-  name: 'ScheduleManagement',
-  components: {
-    Vue3Datepicker,
-  },
-  data() {
-    return {
-      selectedDate: null,
-      selectedService: null,
-      selectedEmployee: null,
-      services: [
-        { id: 1, name: 'Oil Change', price: 50 },
-        { id: 2, name: 'Tire Rotation', price: 30 },
-        { id: 3, name: 'Brake Inspection', price: 70 },
-      ],
-      employees: [
-        { name: 'Stefan' },
-        { name: 'Andrej' },
-        { name: 'John' },
-      ],
-      scheduledServices: [],
-      disableDates: (date) => date < new Date(),
-    };
-  },
-  methods: {
-    scheduleService() {
-      if (this.selectedDate && this.selectedService && this.selectedEmployee) {
-        this.scheduledServices.push({
-          date: this.selectedDate,
-          service: this.selectedService,
-          employee: this.selectedEmployee,
-        });
+// Props for cars
+const props = defineProps({
+  cars: {
+    type: Array,
+    required: true
+  }
+})
 
-        this.selectedDate = null;
-        this.selectedService = null;
-        this.selectedEmployee = null;
-      } else {
-        alert('Please fill in all fields.');
-      }
-    },
-  },
-};
+// Form inputs
+const title = ref('')
+const start = ref('')
+const end = ref('')
+const selectedCarVin = ref('')
+
+// Calendar instance
+const calendarApp = shallowRef(createCalendar({
+  views: [createViewWeek(), createViewMonthGrid(), createViewDay()],
+  selectedDate: '2025-04-30',
+  plugins: [createDragAndDropPlugin()],
+  events: [
+    {
+      id: 1,
+      title: 'Initial Event',
+      start: '2025-04-30 01:00',
+      end: '2025-04-30 05:00'
+    }
+  ]
+}))
+
+function addEvent() {
+  if (!title.value || !start.value || !end.value || !selectedCarVin.value) return
+
+  const car = props.cars.find(c => c.vin === selectedCarVin.value)
+  const carInfo = car ? `${car.brand} ${car.model}` : 'Unknown Car'
+
+  calendarApp.value.events.add({
+    id: Date.now(),
+    title: `${title.value} - ${carInfo}`,
+    start: start.value,
+    end: end.value
+  })
+
+  title.value = ''
+  start.value = ''
+  end.value = ''
+  selectedCarVin.value = ''
+}
 </script>
 
-<style scoped>
-.schedule-management {
-  padding: 20px;
+<style>
+.event-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
 }
-
-.service-form {
-  margin-top: 20px;
-}
-
-.action-button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-}
-
-.action-button:hover {
-  background-color: #45a049;
+.event-form input,
+.event-form select,
+.event-form button {
+  padding: 6px;
+  font-size: 14px;
 }
 </style>

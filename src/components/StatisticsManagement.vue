@@ -52,7 +52,6 @@ export default {
       return breakdown;
     },
 
-    // Pie chart data for service types
     serviceTypeData() {
       const labels = Object.keys(this.serviceTypeBreakdown);
       const data = Object.values(this.serviceTypeBreakdown);
@@ -68,7 +67,6 @@ export default {
       };
     },
 
-    // Bar chart data for revenue by service
     revenueData() {
       const labels = this.services.map(service => service.description);
       const data = this.services.map(service => service.price);

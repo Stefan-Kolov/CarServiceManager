@@ -172,25 +172,25 @@ tr:hover {
 .employee-form button:hover {
   background-color: #2980b9;
 }
-/* Edit and Delete Buttons */
+
 .table-wrapper button {
   padding: 0.5rem 1rem;
-  background-color: #3498db; /* Similar to service-form button */
+  background-color: #3498db;
   color: white;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.95rem;
   transition: background-color 0.3s ease;
-  margin-right: 0.5rem; /* Optional: space between buttons */
+  margin-right: 0.5rem;
 }
 
 .table-wrapper button:hover {
-  background-color: #2980b9; /* Similar to service-form button hover */
+  background-color: #2980b9;
 }
 
 .table-wrapper button:last-child {
-  margin-right: 0; /* Remove margin from the last button */
+  margin-right: 0;
 }
 .employee-form button,
 .table-wrapper button {
@@ -222,35 +222,37 @@ tr:hover {
 .action-button:hover {
   background-color: #2980b9;
 }
-.statistics-management h2 {
-  font-size: 1.5em;
-  margin-bottom: 15px;
+.statistics-management {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.statistics-management .statistics {
-  padding: 10px;
+.statistics-management .statistics,
+.statistics-management .chart {
+  flex: 1 1 300px;
+  padding: 8px;
   background-color: #e0e0e0;
-  border-radius: 8px;
+  border-radius: 6px;
+  box-sizing: border-box;
 }
 
-.statistics-management .statistics h3 {
+.statistics-management h2 {
+  font-size: 1.2em;
+  width: 100%;
   margin-bottom: 10px;
 }
 
-.statistics-management .statistics p {
+.statistics-management .statistics h3,
+.statistics-management .chart h3 {
+  margin-bottom: 6px;
   font-size: 1em;
 }
 
-.statistics-management .chart {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #e0e0e0;
-  border-radius: 8px;
+.statistics-management .statistics p {
+  font-size: 0.9em;
 }
 
-.statistics-management .chart h3 {
-  margin-bottom: 10px;
-}
 .sidebar button {
   display: flex;
   align-items: center;
